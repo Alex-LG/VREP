@@ -6,9 +6,15 @@ namespace YouBot
     {
         static int port;
         static int clientID;
-        static int[] wheelJoints = { -1, -1, -1, -1 };
-        static int[] armJoints = { -1, -1, -1, -1, -1 };
+        static int[] wheelJoints    = { -1, -1, -1, -1 };
+        static int[] armJoints      = { -1, -1, -1, -1, -1 };
         static int youBot = -1;
+
+        static float[] wheelPos = { -1, -1, -1, -1 };
+        static float[] armPos   = { -1, -1, -1, -1, -1 };
+
+        static float[] desiredWheelPos  = { -1, -1, -1, -1 };
+        static float[] desiredArmPos    = { -1, -1, -1, -1, -1 };
 
         static void Main(string[] args)
         {
@@ -18,20 +24,78 @@ namespace YouBot
             
             // Test move
 
-            Move();
+            GetJointPosition();
+            
+            while(true) Move();
 
             Console.ReadLine();
         }
 
-        static void Move()
+        private static void Move()
         {
-            double[] desiredWheelJoint = { 0, 0, 0, 0 };
-            double[] desiredArmJoint = { 0, 0, 0, 0, 0 };
+            GetJointPosition();
 
-            for (int i = 0; i < 5; ++i)
+            CalcMove();
+
+            SetJointPosition();
+        }
+
+        private static void CalcMove()
+        {
+            ConsoleKeyInfo c = Console.ReadKey();
+            switch (c.KeyChar)
             {
-                vrepLib.simxSetJointPosition(clientID, armJoints[i], (float)desiredArmJoint[i], simx_opmode.oneshot_wait);
+                case ('w'):
+                    {
+                        armPos[0] += (float)Math.PI / 180;
+                    }
+                    break;
+                case ('s'):
+                    {
+                        armPos[1] += (float)Math.PI / 180;
+                    }
+                    break;
+                case ('d'):
+                    {
+                        armPos[2] += (float)Math.PI / 180;
+                    }
+                    break;
+                case ('e'):
+                    {
+                        armPos[3] += (float)Math.PI / 180;
+                    }
+                    break;
+                case ('r'):
+                    {
+                        armPos[3] += (float)Math.PI / 180;
+                    }
+                    break;
             }
+
+        }
+
+        private static void GetJointPosition()
+        {
+
+            for (int i = 0; i < 4; ++i)
+            {
+                vrepLib.simxGetJointPosition(clientID, armJoints[i],    ref armPos[i],      simx_opmode.oneshot_wait);
+                vrepLib.simxGetJointPosition(clientID, wheelJoints[i],  ref wheelPos[i],    simx_opmode.oneshot_wait);
+            }
+            
+            vrepLib.simxGetJointPosition(clientID, armJoints[4], ref armPos[4], simx_opmode.oneshot_wait);  
+        }
+
+        static void SetJointPosition()
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                vrepLib.simxSetJointPosition(clientID, wheelJoints[i], wheelPos[i], simx_opmode.oneshot_wait);
+                vrepLib.simxSetJointPosition(clientID, armJoints[i], armPos[i], simx_opmode.oneshot_wait);
+            }
+
+            vrepLib.simxSetJointPosition(clientID, armJoints[4], armPos[4], simx_opmode.oneshot_wait);
+
         }
 
         static void Init()
@@ -51,10 +115,12 @@ namespace YouBot
                 GetHandle(clientID, "rollingJoint_rr", out wheelJoints[2]);
                 GetHandle(clientID, "rollingJoint_fr", out wheelJoints[3]);
 
-                for (int i = 0; i < 4; ++i)
+                for (int i = 0; i < 5; ++i)
                 {
-                    GetHandle(clientID, "youBotArmJoint" + i.ToString(), out armJoints[i + 1]);
+                    GetHandle(clientID, "youBotArmJoint" + i.ToString(), out armJoints[i]);
+                    
                 }
+
             }
             else
             {
