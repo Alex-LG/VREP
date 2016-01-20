@@ -1,23 +1,44 @@
 ﻿using System;
 
-
 namespace YouBot
 {
     class Program
     {
+        static int port;
+        static int clientID;
+        static int[] wheelJoints = { -1, -1, -1, -1 };
+        static int[] armJoints = { -1, -1, -1, -1, -1 };
+        static int youBot = -1;
+
         static void Main(string[] args)
         {
+            Init();
+
+            Console.ReadLine();
             
+            // Test move
 
-            //System.Reflection.Assembly.LoadFrom("$(ProjectDir)\\lib");
+            Move();
 
-            int port = 20100;   // VREP connection port
+            Console.ReadLine();
+        }
 
-            int clientID = vrepLib.simxStart("127.0.0.1", port, true, true, 5000, 5);
+        static void Move()
+        {
+            double[] desiredWheelJoint = { 0, 0, 0, 0 };
+            double[] desiredArmJoint = { 0, 0, 0, 0, 0 };
 
-            int[] wheelJoints = { -1, -1, -1, -1 };
-            int[] armJoints = { -1, -1, -1, -1, -1 };
-            int youBot = -1;
+            for (int i = 0; i < 5; ++i)
+            {
+                vrepLib.simxSetJointPosition(clientID, armJoints[i], (float)desiredArmJoint[i], simx_opmode.oneshot_wait);
+            }
+        }
+
+        static void Init()
+        {
+            port = 20100;   // VREP connection port
+
+            clientID = vrepLib.simxStart("127.0.0.1", port, true, true, 5000, 5);
 
             if (clientID != -1)
             {
@@ -40,16 +61,6 @@ namespace YouBot
                 Console.WriteLine(" - Error on simx.start");
                 vrepLib.simxFinish(clientID);
             }
-
-            Console.ReadLine();
-
-            double[] desiredJ = { 0, 0, 0, 0, 0 };
-            for (int i = 0; i < 5; ++i)
-            {
-                vrepLib.simxSetJointPosition(clientID, armJoints[i], (float)desiredJ[i], simx_opmode.oneshot_wait);
-            }
-
-            Console.ReadLine();
         }
 
         static void GetHandle(int id, string objectName, out int handler)
