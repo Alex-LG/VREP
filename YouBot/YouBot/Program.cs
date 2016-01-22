@@ -39,164 +39,248 @@ namespace YouBot
         {
             GetJointPosition();
 
-            CalcMove();
+            KeyboardControl();
            
             
         }
 
-        private static void CalcMove()
+        private static void Forward()
+        {
+            for (int i = 0; i < 4; ++i)
+                vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], (float)Math.PI, simx_opmode.oneshot_wait);        
+        }
+
+        private static void Stop()
+        {
+            for(int i = 0; i<4;++i)
+                vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], 0, simx_opmode.oneshot_wait);                                                 
+        }
+
+        private static void Backward()
+        {
+            for (int i = 0; i < 4; ++i)
+                vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], -(float)Math.PI, simx_opmode.oneshot_wait);          
+        }
+
+        private static void RotateCounterclockwise()
+        {
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], (float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], (float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], -(float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], -(float)Math.PI, simx_opmode.oneshot_wait);           
+        }
+
+        private static void RotateClockwise()
+        {
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], -(float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], -(float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], (float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], (float)Math.PI, simx_opmode.oneshot_wait);
+        }
+
+        private static void Left()
+        {
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], -(float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], (float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], -(float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], (float)Math.PI, simx_opmode.oneshot_wait);
+        }
+
+        private static void Right()
+        {
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], (float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], -(float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], (float)Math.PI, simx_opmode.oneshot_wait);
+            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], -(float)Math.PI, simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint0Forward()
+        {
+            armPos[0] += (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[0], armPos[0], simx_opmode.oneshot_wait);        
+        }
+
+        private static void ArmJoint0Backward()
+        {
+            armPos[0] -= (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[0], armPos[0], simx_opmode.oneshot_wait);        
+        }
+
+        private static void KeyboardControl()
         {
             ConsoleKeyInfo c = Console.ReadKey();
             switch (c.KeyChar)
             {
                 case ('w'):
                     {
-                        for (int i = 0; i < 4; ++i)
-                            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], (float)Math.PI, simx_opmode.oneshot_wait);
+                        Forward();
                     }
                     break;
                 case ('s'):
                     {
-                        for(int i = 0; i<4;++i)
-                        {
-                            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], 0, simx_opmode.oneshot_wait);
-                            vrepLib.simxSetJointTargetVelocity(clientID, armJoints[i], 0, simx_opmode.oneshot_wait);
-                        }
-
-                        vrepLib.simxSetJointTargetVelocity(clientID, armJoints[4], 0, simx_opmode.oneshot_wait);
-                          
+                        Stop();              
                     }
                     break;
                 case ('x'):
                     {
-                        for (int i = 0; i < 4; ++i)
-                            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], -(float)Math.PI, simx_opmode.oneshot_wait);
+                        Backward();
                     }
                     break;
                 case ('q'):
                     {
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], (float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], (float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], -(float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], -(float)Math.PI, simx_opmode.oneshot_wait);
+                        RotateCounterclockwise();
                     }
                     break;
                 case ('e'):
                     {
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], -(float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], -(float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], (float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], (float)Math.PI, simx_opmode.oneshot_wait);
+                        RotateClockwise();
                     }
                     break;
                 case ('d'):
                     {
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], (float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], -(float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], (float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], -(float)Math.PI, simx_opmode.oneshot_wait);
+                        Right();
                     }
                     break;
                 case ('a'):
                     {
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], -(float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], (float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], -(float)Math.PI, simx_opmode.oneshot_wait);
-                        vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], (float)Math.PI, simx_opmode.oneshot_wait);
+                        Left();
                     }
                     break;
 
                 case ('r'):
                     {
-                        armPos[0] += (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[0], armPos[0], simx_opmode.oneshot_wait);
+                        ArmJoint0Backward();
                     }
                     break;
 
                 case ('f'):
                     {
-                        armPos[0]-=(float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[0], armPos[0], simx_opmode.oneshot_wait);
+                        ArmJoint0Forward();                        
                     }
                     break;
                 case ('t'):
                     {
-                        armPos[1] += (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[1], armPos[1], simx_opmode.oneshot_wait);
+                        ArmJoint1Backward();
                     }
                     break;
 
                 case ('g'):
                     {
-                        armPos[1] -= (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[1], armPos[1], simx_opmode.oneshot_wait);
+                        ArmJoint1Forward(); 
                     }
                     break;
                 case ('y'):
                     {
-                        armPos[2] += (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[2], armPos[2], simx_opmode.oneshot_wait);
+                        ArmJoint2Backward();
                     }
                     break;
 
                 case ('h'):
                     {
-                        armPos[2] -= (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[2], armPos[2], simx_opmode.oneshot_wait);
+                        ArmJoint2Forward(); 
                     }
                     break;
 
                 case ('u'):
                     {
-                        armPos[3] += (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[3], armPos[3], simx_opmode.oneshot_wait);
+                        ArmJoint3Backward();
                     }
                     break;
 
                 case ('j'):
                     {
-                        armPos[3] -= (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[3], armPos[3], simx_opmode.oneshot_wait);
+                        ArmJoint3Forward();
                     }
                     break;
 
                 case ('i'):
                     {
-                        armPos[4] += (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[4], armPos[4], simx_opmode.oneshot_wait);
+                        ArmJoint4Backward(); 
                     }
                     break;
 
                 case ('k'):
                     {
-                        armPos[4] -= (float)Math.PI / 90.0f;
-                        vrepLib.simxSetJointPosition(clientID, armJoints[4], armPos[4], simx_opmode.oneshot_wait);
+                       ArmJoint4Forward(); 
                     }
                     break;
 
                 case ('p'):
                     {
-                        if (gripperOpen)
-                        {
-                            
-                            vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[1], 0.04f, simx_opmode.oneshot_wait);
-
-                            gripperOpen = false;
-                        }
-                        else
-                        {
-                            
-                            vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[1], -0.04f, simx_opmode.oneshot_wait);
-
-                            gripperOpen = true;
-                        }
-                        float gripperPos0 = 0;
-                        vrepLib.simxSetJointTargetPosition(clientID, gripperJoints[0], (float)vrepLib.simxGetJointPosition(clientID, gripperJoints[1], ref gripperPos0, simx_opmode.oneshot_wait) - 0.5f, simx_opmode.oneshot_wait);
+                        GripperOpen();
                     }
                     break;
 
             }
 
+        }
+
+        private static void GripperOpen()
+        {
+            if (gripperOpen)
+            {
+
+                vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[1], 0.04f, simx_opmode.oneshot_wait);
+
+                gripperOpen = false;
+            }
+            else
+            {
+
+                vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[1], -0.04f, simx_opmode.oneshot_wait);
+
+                gripperOpen = true;
+            }
+            float gripperPos0 = 0;
+            vrepLib.simxSetJointTargetPosition(clientID, gripperJoints[0], (float)vrepLib.simxGetJointPosition(clientID, gripperJoints[1], ref gripperPos0, simx_opmode.oneshot_wait) - 0.5f, simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint4Backward()
+        {
+            armPos[4] -= (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[4], armPos[4], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint4Forward()
+        {
+            armPos[4] += (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[4], armPos[4], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint3Forward()
+        {
+            armPos[3] += (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[3], armPos[3], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint3Backward()
+        {
+            armPos[3] -= (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[3], armPos[3], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint2Forward()
+        {
+            armPos[2] += (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[2], armPos[2], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint2Backward()
+        {
+            armPos[2] -= (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[2], armPos[2], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint1Forward()
+        {
+            armPos[1] += (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[1], armPos[1], simx_opmode.oneshot_wait);
+        }
+
+        private static void ArmJoint1Backward()
+        {
+            armPos[1] -= (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, armJoints[1], armPos[1], simx_opmode.oneshot_wait);
         }
 
         private static void GetJointPosition()
@@ -207,14 +291,6 @@ namespace YouBot
                 vrepLib.simxGetJointPosition(clientID, armJoints[i],    ref armPos[i],      simx_opmode.oneshot_wait);
             }
 
-        }
-
-        static void SetJointPosition()
-        {
-            for (int i = 0; i < 5; ++i)
-            {
-                vrepLib.simxSetJointPosition(clientID, armJoints[i], armPos[i], simx_opmode.oneshot_wait);
-            }
         }
 
         static void Init()
