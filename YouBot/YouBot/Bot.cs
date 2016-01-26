@@ -10,6 +10,7 @@ namespace YouBot
         private Platform platform;
         private Arm arm;
         private Gripper gripper;
+        private SensSys sensSys;
 
         public Bot(int port)
         {
@@ -20,6 +21,7 @@ namespace YouBot
                 platform    = new Platform(clientID);
                 arm         = new Arm(clientID);
                 gripper     = new Gripper(clientID);
+                sensSys      = new SensSys(clientID);
             }            
         }        
 
@@ -40,8 +42,17 @@ namespace YouBot
         }
 
         public void Move()
-        {           
-            KeyboardControl();
+        {
+            sensSys.Scan();
+            bool findTrigger = sensSys.find[0]||sensSys.find[1]||sensSys.find[2]||sensSys.find[3];
+            if (findTrigger)
+            {
+                platform.Stop();
+                return;
+            }
+            else platform.Forward();
+
+            //KeyboardControl();
         }
 
         private void KeyboardControl()
