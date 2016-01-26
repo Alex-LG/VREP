@@ -3,8 +3,6 @@ using System;
 
 namespace YouBot
 {
-
-
     class Bot
     {
         public int clientID;                        
@@ -22,8 +20,7 @@ namespace YouBot
                 platform    = new Platform(clientID);
                 arm         = new Arm(clientID);
                 gripper     = new Gripper(clientID);
-            }
-            
+            }            
         }        
 
         public void Init(int port)

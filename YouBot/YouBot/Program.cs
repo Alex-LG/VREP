@@ -1,14 +1,9 @@
-﻿using System;
-using System.Threading;
-
+﻿
 namespace YouBot
 {
     class Program
     {
-
         const int PORT = 20100;
-
-        static int port;
 
         static void Main(string[] args)
         {
@@ -18,11 +13,7 @@ namespace YouBot
                 while (true)
                 {
                     bot.Move();
-                }
-          
-
+                }         
         }
-
-
     }
 }

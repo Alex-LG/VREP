@@ -32,7 +32,9 @@ namespace YouBot
 
                 open = true;
             }
+            
             float gripperPos0 = 0;
+           
             vrepLib.simxSetJointTargetPosition(clientID, gripperJoints[0], (float)vrepLib.simxGetJointPosition(clientID, gripperJoints[1], ref gripperPos0, simx_opmode.oneshot_wait) - 0.5f, simx_opmode.oneshot_wait);
         }
     }

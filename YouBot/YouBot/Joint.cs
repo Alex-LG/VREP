@@ -34,7 +34,5 @@ namespace YouBot
         {
             Move((float)Math.PI / 90.0f);
         }
-
-
     }
 }
