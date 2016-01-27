@@ -15,11 +15,11 @@ namespace YouBot
         public Joint joint3;
         public Joint joint4;
 
-        public Arm(int id)
+        public Arm(int id, string suffix)
         {
             for (int i = 0; i < 5; ++i)
             {
-                GetHandle(clientID, "youBotArmJoint" + i.ToString(), out armJoints[i]);
+                GetHandle(clientID, "youBotArmJoint" + i.ToString() + suffix, out armJoints[i]);
             }
 
             joint0 = new Joint(id, armJoints[0]);

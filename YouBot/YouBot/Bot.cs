@@ -3,26 +3,39 @@ using System;
 
 namespace YouBot
 {
+    public enum CONTROL_TYPE
+    {
+        MANUAL,
+        AUTOMATIC
+    };
+
     class Bot
     {
-        public int clientID;                        
 
+        
+
+        public int clientID;
+        private string suffix;
+
+        
         private Platform platform;
         private Arm arm;
         private Gripper gripper;
         private SensSys sensSys;
 
-        public Bot(int port)
+        public Bot(int port, string suffix)
         {
             Init(port);
 
             if(clientID != -1)
             {
-                platform    = new Platform(clientID);
-                arm         = new Arm(clientID);
-                gripper     = new Gripper(clientID);
-                sensSys      = new SensSys(clientID);
-            }            
+                platform    = new Platform(clientID, suffix);
+                arm = new Arm(clientID, suffix);
+                gripper = new Gripper(clientID, suffix);
+                sensSys = new SensSys(clientID, suffix);
+            }
+
+           
         }        
 
         public void Init(int port)
@@ -41,20 +54,43 @@ namespace YouBot
             }
         }
 
-        public void Move()
+        public void MoveAutomatic()
+        {
+            while (true)
+            {
+                platformAlgorithm();
+                armAlgorithm();                    
+            } 
+        }
+
+
+
+        public void MoveManual()
+        {            
+            while(true)    
+                KeyboardControl();                              
+        }
+
+        private void platformAlgorithm()
         {
             sensSys.Scan();
-            bool findTrigger = sensSys.find[0]||sensSys.find[1]||sensSys.find[2]||sensSys.find[3];
+
+            bool findTrigger = sensSys.find[0] || sensSys.find[1] || sensSys.find[2] || sensSys.find[3];
             if (findTrigger)
             {
                 platform.Stop();
                 return;
             }
-            else platform.Forward();
-
-            //KeyboardControl();
+            else platform.Right();
         }
 
+        private void armAlgorithm()
+        {
+
+
+        }
+
+        
         private void KeyboardControl()
         {
             ConsoleKeyInfo c = Console.ReadKey();

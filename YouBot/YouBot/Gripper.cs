@@ -8,12 +8,12 @@ namespace YouBot
 
         int[] gripperJoints = { -1, -1 };
 
-        public Gripper(int id)
+        public Gripper(int id, string suffix)
         {
             clientID = id;
 
-            GetHandle(clientID, "youBotGripperJoint1", out gripperJoints[0]);
-            GetHandle(clientID, "youBotGripperJoint2", out gripperJoints[1]);
+            GetHandle(clientID, "youBotGripperJoint1" + suffix, out gripperJoints[0]);
+            GetHandle(clientID, "youBotGripperJoint2" + suffix, out gripperJoints[1]);
         }
 
         public void Open()

@@ -7,14 +7,14 @@ namespace YouBot
     {
         private int[] wheelJoints = {-1, -1, -1, -1};
 
-        public Platform(int id)
+        public Platform(int id, string suffix)
         {
             clientID = id;
 
-            GetHandle(clientID, "rollingJoint_fl", out wheelJoints[0]);
-            GetHandle(clientID, "rollingJoint_rl", out wheelJoints[1]);
-            GetHandle(clientID, "rollingJoint_rr", out wheelJoints[2]);
-            GetHandle(clientID, "rollingJoint_fr", out wheelJoints[3]);
+            GetHandle(clientID, "rollingJoint_fl" + suffix, out wheelJoints[0]);
+            GetHandle(clientID, "rollingJoint_rl" + suffix, out wheelJoints[1]);
+            GetHandle(clientID, "rollingJoint_rr" + suffix, out wheelJoints[2]);
+            GetHandle(clientID, "rollingJoint_fr" + suffix, out wheelJoints[3]);
         }
 
         private int clientID;

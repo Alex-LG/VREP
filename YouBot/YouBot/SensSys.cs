@@ -15,13 +15,13 @@ namespace YouBot
         Sensor back;
 
 
-        public SensSys(int id)
+        public SensSys(int id, string suffix)
         {
             clientID = id;
 
             for (int i = 0; i < 4; ++i)
             {
-                GetHandle(clientID, "Proximity_sensor" + i.ToString(), out sensorHandlers[i]);
+                GetHandle(clientID, "Proximity_sensor" + i.ToString() + suffix, out sensorHandlers[i]);
             }
 
             back    = new Sensor(id, sensorHandlers[0]);
