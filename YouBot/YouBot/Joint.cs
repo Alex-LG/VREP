@@ -8,6 +8,8 @@ namespace YouBot
         int handler;
         float position;
 
+        private float step = (float)Math.PI / 45.0f;
+
         public Joint(int id, int handler)
         {
             this.clientID = id;
@@ -22,13 +24,9 @@ namespace YouBot
         public void Move(float value)
         {
             GetPosition();
-
             position += value;
-            
-            vrepLib.simxSetJointPosition(clientID, handler, position, simx_opmode.oneshot);        
-        }
-
-        private float step = (float)Math.PI / 90.0f;
+            vrepLib.simxSetJointPosition(clientID, handler, position, simx_opmode.oneshot);
+        }        
 
         public void Backward()
         {

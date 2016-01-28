@@ -1,11 +1,12 @@
 ﻿using System;
 
-
 namespace YouBot
 {
     class Platform : Subsystem
     {
         private int[] wheelJoints = {-1, -1, -1, -1};
+        private int clientID;
+
 
         public Platform(int id, string suffix)
         {
@@ -17,58 +18,61 @@ namespace YouBot
             GetHandle(clientID, "rollingJoint_fr" + suffix, out wheelJoints[3]);
         }
 
-        private int clientID;
-        
+        private float velocity = (float)Math.PI;
+
+        private void BasicMove(int handle, float velocity)
+        {
+            vrepLib.simxSetJointTargetVelocity(clientID, handle, velocity, simx_opmode.oneshot);
+        }
 
         public void Forward()
         {
             for (int i = 0; i < 4; ++i)
-                vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], (float)Math.PI, simx_opmode.oneshot_wait);
+                BasicMove(wheelJoints[i], velocity);                
         }
 
         public void Stop()
         {
             for (int i = 0; i < 4; ++i)
-                vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], 0, simx_opmode.oneshot_wait);
+                BasicMove(wheelJoints[i], 0);
         }
 
         public void Backward()
         {
             for (int i = 0; i < 4; ++i)
-                vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[i], -(float)Math.PI, simx_opmode.oneshot_wait);
+                BasicMove(wheelJoints[i], -velocity);
         }
 
         public void RotateCounterclockwise()
         {
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], (float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], (float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], -(float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], -(float)Math.PI, simx_opmode.oneshot_wait);
+            BasicMove(wheelJoints[0],  velocity);
+            BasicMove(wheelJoints[1],  velocity);
+            BasicMove(wheelJoints[2], -velocity);
+            BasicMove(wheelJoints[3], -velocity);            
         }
 
         public void RotateClockwise()
         {
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], -(float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], -(float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], (float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], (float)Math.PI, simx_opmode.oneshot_wait);
+            BasicMove(wheelJoints[0], -velocity);
+            BasicMove(wheelJoints[1], -velocity);
+            BasicMove(wheelJoints[2],  velocity);
+            BasicMove(wheelJoints[3],  velocity);  
         }
 
         public void Left()
         {
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], -(float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], (float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], -(float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], (float)Math.PI, simx_opmode.oneshot_wait);
+            BasicMove(wheelJoints[0], -velocity);
+            BasicMove(wheelJoints[1],  velocity);
+            BasicMove(wheelJoints[2], -velocity);
+            BasicMove(wheelJoints[3],  velocity);  
         }
 
         public void Right()
         {
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[0], (float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[1], -(float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[2], (float)Math.PI, simx_opmode.oneshot_wait);
-            vrepLib.simxSetJointTargetVelocity(clientID, wheelJoints[3], -(float)Math.PI, simx_opmode.oneshot_wait);
+            BasicMove(wheelJoints[0],  velocity);
+            BasicMove(wheelJoints[1], -velocity);
+            BasicMove(wheelJoints[2],  velocity);
+            BasicMove(wheelJoints[3], -velocity);  
         }
-
     }
 }

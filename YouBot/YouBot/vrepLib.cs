@@ -31,8 +31,7 @@ namespace YouBot
     }
 
     class vrepLib
-    {
-        
+    {        
         [DllImport("remoteApi.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void simxFinish(int clientID);
 
@@ -101,5 +100,11 @@ namespace YouBot
 
         [DllImport("remoteApi.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern simx_error simxSetIntegerSignal(int clientID, string signalName, int signalValue, simx_opmode opmode);
+
+        [DllImport("remoteApi.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern simx_error simxSetJointForce(int clientID, int jointHandle, float jointForce, simx_opmode opmode);
+
+        [DllImport("remoteApi.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern simx_error simxGetJointForce(int clientID, int jointHandle, float jointForce, simx_opmode opmode);
     }
 }
