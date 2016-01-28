@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Threading;
 
 namespace YouBot
 {
@@ -10,13 +11,9 @@ namespace YouBot
     };
 
     class Bot
-    {
-
-        
-
+    {       
         public int clientID;
-        private string suffix;
-
+        //private string suffix;
         
         private Platform platform;
         private Arm arm;
@@ -56,24 +53,30 @@ namespace YouBot
 
         public void MoveAutomatic()
         {
-            while (true)
-            {
-                platformAlgorithm();
-                armAlgorithm();                    
-            } 
+            Thread tSens  = new Thread(sensSys.loop);
+            Thread tPlatf = new Thread(platform.loop);
+
+            tSens.Start();
+            tPlatf.Start();
         }
 
 
 
         public void MoveManual()
-        {            
-            while(true)    
-                KeyboardControl();                              
+        {
+            Thread tSens = new Thread(sensSys.loop);
+            Thread tPlatf = new Thread(platform.loop);
+            Thread tControl = new Thread(KeyboardControl);
+
+            tSens.Start();
+            tPlatf.Start();  
+            tControl.Start();
+                        
         }
 
         private void platformAlgorithm()
         {
-            sensSys.Scan();
+            
 
             bool findTrigger = sensSys.find[0] || sensSys.find[1] || sensSys.find[2] || sensSys.find[3];
             if (findTrigger)
@@ -93,110 +96,113 @@ namespace YouBot
         
         private void KeyboardControl()
         {
-            ConsoleKeyInfo c = Console.ReadKey();
-            switch (c.KeyChar)
+            while(true)
             {
-                case ('w'):
-                    {
-                       platform.Forward();
-                    }
-                    break;
-                case ('s'):
-                    {
-                        platform.Stop();
-                    }
-                    break;
-                case ('x'):
-                    {
-                        platform.Backward();
-                    }
-                    break;
-                case ('q'):
-                    {
-                        platform.RotateCounterclockwise();
-                    }
-                    break;
-                case ('e'):
-                    {
-                        platform.RotateClockwise();
-                    }
-                    break;
-                case ('d'):
-                    {
-                        platform.Right();
-                    }
-                    break;
-                case ('a'):
-                    {
-                        platform.Left();
-                    }
-                    break;
+                ConsoleKeyInfo c = Console.ReadKey();
+                switch (c.KeyChar)
+                {
+                    case ('w'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.FORWARD);
+                        }
+                        break;
+                    case ('s'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.STOP);
+                        }
+                        break;
+                    case ('x'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.BACKWARD);
+                        }
+                        break;
+                    case ('q'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.ROTATE_COUNTERCLOCKWISE);
+                        }
+                        break;
+                    case ('e'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.ROTATE_CLOCKWISE);
+                        }
+                        break;
+                    case ('d'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.RIGHT);
+                        }
+                        break;
+                    case ('a'):
+                        {
+                            platform.ChangeState(PLATFORM_STATE.LEFT);
+                        }
+                        break;
 
-                case ('r'):
-                    {
-                        arm.joint0.Backward();
-                    }
-                    break;
+                    case ('r'):
+                        {
+                            arm.joint0.Backward();
+                        }
+                        break;
 
-                case ('f'):
-                    {
-                        arm.joint0.Forward();
-                    }
-                    break;
-                case ('t'):
-                    {
-                        arm.joint1.Backward();
-                    }
-                    break;
+                    case ('f'):
+                        {
+                            arm.joint0.Forward();
+                        }
+                        break;
+                    case ('t'):
+                        {
+                            arm.joint1.Backward();
+                        }
+                        break;
 
-                case ('g'):
-                    {
-                        arm.joint1.Forward();
-                    }
-                    break;
-                case ('y'):
-                    {
-                        arm.joint2.Backward();
-                    }
-                    break;
+                    case ('g'):
+                        {
+                            arm.joint1.Forward();
+                        }
+                        break;
+                    case ('y'):
+                        {
+                            arm.joint2.Backward();
+                        }
+                        break;
 
-                case ('h'):
-                    {
-                        arm.joint2.Forward();
-                    }
-                    break;
+                    case ('h'):
+                        {
+                            arm.joint2.Forward();
+                        }
+                        break;
 
-                case ('u'):
-                    {
-                        arm.joint3.Backward();
-                    }
-                    break;
+                    case ('u'):
+                        {
+                            arm.joint3.Backward();
+                        }
+                        break;
 
-                case ('j'):
-                    {
-                        arm.joint3.Forward();
-                    }
-                    break;
+                    case ('j'):
+                        {
+                            arm.joint3.Forward();
+                        }
+                        break;
 
-                case ('i'):
-                    {
-                        arm.joint4.Backward();
-                    }
-                    break;
+                    case ('i'):
+                        {
+                            arm.joint4.Backward();
+                        }
+                        break;
 
-                case ('k'):
-                    {
-                        arm.joint4.Forward();
-                    }
-                    break;
+                    case ('k'):
+                        {
+                            arm.joint4.Forward();
+                        }
+                        break;
 
-                case ('p'):
-                    {
-                        gripper.Open();
-                    }
-                    break;
-
+                    case ('p'):
+                        {
+                            gripper.Open();
+                        }
+                        break;
+                }            
             }
+           
 
         }
 

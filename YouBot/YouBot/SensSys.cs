@@ -7,6 +7,8 @@ namespace YouBot
 
         int[] sensorHandlers = { -1, -1, -1, -1 };
 
+        public bool sensingEnabled = true;
+
         public bool[] find = { false, false, false, false };
 
         Sensor left;
@@ -31,18 +33,18 @@ namespace YouBot
             
         }
 
-        public void Scan()
+        public void loop()
         {
-            ScanRight();
+            while(sensingEnabled)
+            {
+                back.Scan();
+                front.Scan();
+                left.Scan();
+                right.Scan();
+            }
+            
         }
 
-        public void ScanRight()
-        {
-            right.Scan();
-
-            if (right.detectionState != 0)  find[3] = true;            
-            else find[3] = false;
-        }
 
     }
 }

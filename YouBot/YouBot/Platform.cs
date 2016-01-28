@@ -2,11 +2,24 @@
 
 namespace YouBot
 {
+    enum PLATFORM_STATE
+    { 
+        FORWARD,
+        STOP,
+        BACKWARD,
+        ROTATE_COUNTERCLOCKWISE,
+        ROTATE_CLOCKWISE,
+        LEFT,
+        RIGHT
+    };
+
     class Platform : Subsystem
     {
         private int[] wheelJoints = {-1, -1, -1, -1};
         private int clientID;
 
+        public PLATFORM_STATE state;
+        private bool stateChanged = false;
 
         public Platform(int id, string suffix)
         {
@@ -19,6 +32,59 @@ namespace YouBot
         }
 
         private float velocity = (float)Math.PI;
+
+        public void ChangeState(PLATFORM_STATE s)
+        {
+            state = s;
+            stateChanged = true;
+        }
+
+        private void ReadState()
+        {
+            switch(state)
+            {
+                case PLATFORM_STATE.BACKWARD :
+                Backward();
+                break;
+
+                case PLATFORM_STATE.FORWARD:
+                Forward();
+                break;
+
+                case PLATFORM_STATE.LEFT:
+                Left();
+                break;
+
+                case PLATFORM_STATE.RIGHT:
+                Right();
+                break;
+
+                case PLATFORM_STATE.ROTATE_CLOCKWISE:
+                RotateClockwise();
+                break;
+
+                case PLATFORM_STATE.ROTATE_COUNTERCLOCKWISE:
+                RotateCounterclockwise();
+                break;
+
+                case PLATFORM_STATE.STOP:
+                Stop();
+                break;
+            }
+
+            stateChanged = false;
+        }
+
+        public void loop()
+        {
+            while (true)
+            {
+                if (stateChanged)
+                {
+                    ReadState();
+                }
+            }
+        }
 
         private void BasicMove(int handle, float velocity)
         {
