@@ -66,8 +66,8 @@ namespace YouBot
         {
             Thread tSens = new Thread(sensSys.loop);
             Thread tPlatf = new Thread(platform.loop);
-            Thread tControl = new Thread(platformAlgorithm);            
-
+            //Thread tControl = new Thread(platformAlgorithm);
+            Thread tControl = new Thread(KeyboardControl);            
             tSens.Start();
             tPlatf.Start();  
             tControl.Start();
@@ -76,7 +76,7 @@ namespace YouBot
 
         private void platformAlgorithm()
         {           
-            while (!sensSys.ObjectDetected() )
+            while ( sensSys.ObjectDetected() == SENSOR_DIRECTION.NOVALUE )
             {                
                 platform.ChangeState(PLATFORM_STATE.BACKWARD);
             }

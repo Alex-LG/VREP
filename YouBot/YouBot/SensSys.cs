@@ -2,6 +2,15 @@
 using System;
 namespace YouBot
 {
+    enum SENSOR_DIRECTION
+    { 
+        NOVALUE,
+        BACK,
+        FRONT,
+        LEFT,
+        RIGHT
+    };
+
     class SensSys : Subsystem
     {
         int clientID;
@@ -10,9 +19,15 @@ namespace YouBot
 
         public bool sensingEnabled = true;
 
-        public bool ObjectDetected()
+        public SENSOR_DIRECTION ObjectDetected()
         {
-            return (back.detectionState == 1) || (front.detectionState == 1) || (left.detectionState == 1) || (right.detectionState == 1);
+
+            if (back.detectionState == 1) return SENSOR_DIRECTION.BACK;
+            if (front.detectionState == 1) return SENSOR_DIRECTION.FRONT;
+            if (left.detectionState == 1) return SENSOR_DIRECTION.LEFT;
+            if (right.detectionState == 1) return SENSOR_DIRECTION.RIGHT;
+
+             return SENSOR_DIRECTION.NOVALUE;
         }
 
         Sensor left;
