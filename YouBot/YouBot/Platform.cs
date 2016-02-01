@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace YouBot
 {
@@ -31,7 +32,7 @@ namespace YouBot
             GetHandle(clientID, "rollingJoint_fr" + suffix, out wheelJoints[3]);
         }
 
-        private float velocity = (float)Math.PI;
+        private float velocity = (float)Math.PI/2;
 
         public void ChangeState(PLATFORM_STATE s)
         {
@@ -83,12 +84,16 @@ namespace YouBot
                 {
                     ReadState();
                 }
+
+                Thread.Sleep(1);
             }
         }
 
         private void BasicMove(int handle, float velocity)
         {
-            vrepLib.simxSetJointTargetVelocity(clientID, handle, velocity, simx_opmode.oneshot);
+            simx_error e = vrepLib.simxSetJointTargetVelocity(clientID, handle, velocity, simx_opmode.oneshot);
+
+            if (simx_error.noerror != e) vrepLib.simxSetJointTargetVelocity(clientID, handle, 0, simx_opmode.oneshot);
         }
 
         public void Forward()

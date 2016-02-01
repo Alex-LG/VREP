@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace YouBot
 {
     class SensSys : Subsystem
@@ -9,12 +10,15 @@ namespace YouBot
 
         public bool sensingEnabled = true;
 
-        public bool[] find = { false, false, false, false };
+        public bool ObjectDetected()
+        {
+            return (back.detectionState == 1) || (front.detectionState == 1) || (left.detectionState == 1) || (right.detectionState == 1);
+        }
 
         Sensor left;
         Sensor right;
         Sensor front;
-        Sensor back;
+        public Sensor back;
 
 
         public SensSys(int id, string suffix)
@@ -40,7 +44,7 @@ namespace YouBot
                 back.Scan();
                 front.Scan();
                 left.Scan();
-                right.Scan();
+                right.Scan();                
             }
             
         }

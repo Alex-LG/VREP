@@ -18,9 +18,16 @@ namespace YouBot
             this.handler  = handler;
         }
 
+        public float Distance()
+        {
+            double v = Math.Sqrt(detectionPoint[0] * detectionPoint[0] + detectionPoint[1] * detectionPoint[1] + detectionPoint[2] * detectionPoint[2]);
+            //Console.WriteLine(v);
+            return (float)v;
+        }
+
         public void ClearMeasurements()
         {
-            detectionState = '0';
+            detectionState = (char)0;
             detectionPoint[0] = -1.0f;
             detectionPoint[1] = -1.0f;
             detectionPoint[2] = -1.0f;
@@ -30,13 +37,11 @@ namespace YouBot
             normalVector[2] = -1.0f;
         }
 
+
+
         public void Scan()
-        {
-            ClearMeasurements();
-
-            simx_error e = vrepLib.simxReadProximitySensor(clientID, handler, ref detectionState, detectionPoint, ref objectHandle, normalVector, simx_opmode.oneshot_wait);
-
-            if (e != simx_error.noerror) Console.WriteLine("Error");
+        {            
+            vrepLib.simxReadProximitySensor(clientID, handler, ref detectionState, detectionPoint, ref objectHandle, normalVector, simx_opmode.oneshot);            
         }
     }
 }

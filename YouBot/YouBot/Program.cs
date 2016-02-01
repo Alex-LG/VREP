@@ -20,7 +20,7 @@ namespace YouBot
 //          Bot bot1 = new Bot(PORT1, "#0");
 
 
-            Thread thread0 = new Thread(bot0.MoveManual);
+            Thread thread0 = new Thread(bot0.Loop);
 //          Thread thread1 = new Thread(bot1.MoveManual);
 
             thread0.Start();

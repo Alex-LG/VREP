@@ -20,7 +20,7 @@ namespace YouBot
         {
             if (open)
             {
-
+                vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[0], -0.04f, simx_opmode.oneshot_wait);
                 vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[1], 0.04f, simx_opmode.oneshot_wait);
 
                 open = false;
@@ -28,14 +28,14 @@ namespace YouBot
             else
             {
 
+                vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[0], 0.04f, simx_opmode.oneshot_wait);
                 vrepLib.simxSetJointTargetVelocity(clientID, gripperJoints[1], -0.04f, simx_opmode.oneshot_wait);
-
                 open = true;
             }
             
-            float gripperPos0 = 0;
+            
            
-            vrepLib.simxSetJointTargetPosition(clientID, gripperJoints[0], (float)vrepLib.simxGetJointPosition(clientID, gripperJoints[1], ref gripperPos0, simx_opmode.oneshot_wait) - 0.5f, simx_opmode.oneshot_wait);
+            
         }
     }
 }

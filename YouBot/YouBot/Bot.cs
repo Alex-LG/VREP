@@ -50,7 +50,7 @@ namespace YouBot
                 vrepLib.simxFinish(clientID);
             }
         }
-
+        /*
         public void MoveAutomatic()
         {
             Thread tSens  = new Thread(sensSys.loop);
@@ -59,14 +59,14 @@ namespace YouBot
             tSens.Start();
             tPlatf.Start();
         }
+        */
 
 
-
-        public void MoveManual()
+        public void Loop()
         {
             Thread tSens = new Thread(sensSys.loop);
             Thread tPlatf = new Thread(platform.loop);
-            Thread tControl = new Thread(KeyboardControl);
+            Thread tControl = new Thread(platformAlgorithm);            
 
             tSens.Start();
             tPlatf.Start();  
@@ -75,22 +75,66 @@ namespace YouBot
         }
 
         private void platformAlgorithm()
-        {
-            
-
-            bool findTrigger = sensSys.find[0] || sensSys.find[1] || sensSys.find[2] || sensSys.find[3];
-            if (findTrigger)
-            {
-                platform.Stop();
-                return;
+        {           
+            while (!sensSys.ObjectDetected() )
+            {                
+                platform.ChangeState(PLATFORM_STATE.BACKWARD);
             }
-            else platform.Right();
+
+            while (sensSys.back.Distance() > 0.22f)
+            {
+
+                
+                platform.ChangeState(PLATFORM_STATE.BACKWARD);
+                Thread.Sleep(1);
+            }
+
+            platform.ChangeState(PLATFORM_STATE.STOP);            
+
+            armAlgorithm();
+
+            KeyboardControl();
         }
 
         private void armAlgorithm()
         {
+            while (arm.joint1.position > -1.2f)
+            {                
+                arm.joint1.Backward();
+            }
 
+            while (arm.joint2.position > -0.9f)
+            {
+                arm.joint2.Backward();
+            }
 
+            while (arm.joint3.position > -0.95f)
+            {
+                arm.joint3.Backward();
+            }
+           
+            gripper.Open();
+            Thread.Sleep(1000);
+            gripper.Open();
+            Thread.Sleep(1000);
+            
+            while (arm.joint2.position < 1f)
+            {
+                arm.joint2.Forward();
+            }
+            while (arm.joint3.position < 1f)
+            {
+                arm.joint3.Forward();
+            }
+            while (arm.joint1.position < 1f)
+            {
+                arm.joint1.Forward();
+            }
+
+            gripper.Open();
+            Thread.Sleep(1000);
+
+            
         }
 
         
