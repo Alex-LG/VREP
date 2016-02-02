@@ -4,12 +4,6 @@ using System.Threading;
 
 namespace YouBot
 {
-    public enum CONTROL_TYPE
-    {
-        MANUAL,
-        AUTOMATIC
-    };
-
     class Bot
     {       
         public int clientID;
@@ -50,24 +44,13 @@ namespace YouBot
                 vrepLib.simxFinish(clientID);
             }
         }
-        /*
-        public void MoveAutomatic()
-        {
-            Thread tSens  = new Thread(sensSys.loop);
-            Thread tPlatf = new Thread(platform.loop);
-
-            tSens.Start();
-            tPlatf.Start();
-        }
-        */
-
 
         public void Loop()
         {
             Thread tSens = new Thread(sensSys.loop);
-            Thread tPlatf = new Thread(platform.loop);
-            //Thread tControl = new Thread(platformAlgorithm);
-            Thread tControl = new Thread(KeyboardControl);            
+            Thread tPlatf = new Thread(platform.loop);            
+            Thread tControl = new Thread(KeyboardControl);    
+        
             tSens.Start();
             tPlatf.Start();  
             tControl.Start();
@@ -132,9 +115,7 @@ namespace YouBot
             }
 
             gripper.Open();
-            Thread.Sleep(1000);
-
-            
+            Thread.Sleep(1000);            
         }
 
         
